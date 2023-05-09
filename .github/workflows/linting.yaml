@@ -1,4 +1,4 @@
-name: Python application #name of our applications, name doesn't matter
+name: Python Linting Checks
 
 on:
   pull_request:
