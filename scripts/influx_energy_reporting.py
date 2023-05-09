@@ -72,7 +72,7 @@ def main():
         "fill(linear)",
         bind_params={"start_date_time": settings.start_date, "end_date_time": settings.end_date},
     )
-    print(settings.table_format_str.format("Device Friendly Name", "Total Energy", "Cost"))
+    print(settings.table_format_str.format("Device Friendly Name", "Energy (KWh)", "Cost (€)"))
     for (_, tag_data), values in data.items():
         device_name = tag_data["friendly_name"]
         total_energy = Decimal("0.00")
@@ -98,7 +98,6 @@ def main():
             last_energy_val = cur_val
         total_energy = total_energy.quantize(Decimal("0.001"))
         total_cost = total_cost.quantize(Decimal("0.00"))
-        # print(f"{device_name=} {total_energy=} {total_cost=}")
         print(settings.table_format_str.format(device_name, total_energy, total_cost))
 
 
