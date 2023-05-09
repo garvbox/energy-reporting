@@ -17,7 +17,7 @@ repos:
         name: flake8
         language: system
         types: [python]
-        entry: poetry run flake8 --extend-ignore=S404,S603 --max-line-length=100
+        entry: poetry run flake8
       - id: isort
         name: isort
         language: system

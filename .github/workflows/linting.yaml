@@ -1,0 +1,30 @@
+name: Python application #name of our applications, name doesn't matter
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.11
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.1.13
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: Check Formatting with black
+        run: poetry run black --check --verbose scripts/
+      - name: Lint with flake8
+        run: poetry run flake8 ./scripts
+      - name: Check Import order
+        run: poetry run isort -c --profile black

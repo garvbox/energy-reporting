@@ -1,0 +1,17 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+
+# Virtualenv
+venv
+.venv
+.env
+.python-version
+
+# Config
+*.ini
+logs/
+
+# IDEs
+.vscode
+.idea

@@ -22,7 +22,7 @@ Install pre-commit hooks (ensure you have installed poetry first):
 
 ## Tools
 
-Provided scripts:
+Provided scripts in the `scripts` directory
 
 * influx_energy_report.py
 
@@ -30,3 +30,10 @@ A script to gather `energy_total` values from InfluxDB and summarise with cost i
 
 Example usage:
 `INFLUX_HOST=influx_server.domain.lan INFLUX_DATABASE=database poetry run ./influx_energy_report.py`
+
+## Planned Improvements
+
+* The energy stats gathering could be made generic and support multiple backends, a library will
+    be built to share common components here
+* We will need more advanced configuration for energy rates and external sources
+* A WebUI will be handy for inputting variable data like rates that cannot be pre-seeded

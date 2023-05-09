@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "energy_reporting"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 pydantic = "^1.10.7"
 influxdb = "^5.3.1"
 
