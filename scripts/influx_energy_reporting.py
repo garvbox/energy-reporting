@@ -17,8 +17,9 @@ class InfluxConnectionSettings(BaseModel):
 
 class Settings(BaseSettings):
     influx: InfluxConnectionSettings
-    num_days: int = 1
     decimal_precision: int = 6
+    start_date: str
+    end_date: str
 
     class Config:
         env_nested_delimiter = "_"
@@ -34,11 +35,10 @@ def main():
     data = influx_client.query(
         "SELECT max(value) "
         "FROM kWh WHERE (entity_id =~ /energy_total/) AND "
-        "time >= now() - 30d AND time <= now() "
+        "time >= $start_date_time AND time <= $end_date_time "
         "GROUP BY time(1h), friendly_name "
         "fill(linear)",
-        # TODO: Fix bind_param injection - getting query date type error
-        # bind_params={"num_days": str(settings.num_days) + "d"},
+        bind_params={"start_date_time": settings.start_date, "end_date_time": settings.end_date},
     )
     for (_, tag_data), values in data.items():
         device_name = tag_data["friendly_name"]
