@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     decimal_precision: int = 6
     start_date: str
     end_date: str
+    table_format_str = "{:<36} {:>12} {:>12}"
 
     class Config:
         env_nested_delimiter = "_"
@@ -71,6 +72,7 @@ def main():
         "fill(linear)",
         bind_params={"start_date_time": settings.start_date, "end_date_time": settings.end_date},
     )
+    print(settings.table_format_str.format("Device Friendly Name", "Total Energy", "Cost"))
     for (_, tag_data), values in data.items():
         device_name = tag_data["friendly_name"]
         total_energy = Decimal("0.00")
@@ -82,16 +84,22 @@ def main():
                 #   when we have values missing from the start of a range. In that case there
                 #   is not much we can do with it so we have to just start later
                 continue
-            cur_val = Decimal(time_max_data["max"])
+            cur_val = Decimal(str(time_max_data["max"]))
             if last_energy_val is None:
                 last_energy_val = cur_val
                 continue
             total_energy += cur_val - last_energy_val
+            # TODO: Check if we are calculating the right value here, whether we need to
+            # use the min val for an hour and base our rate off the previous hour etc.
+            # Currently using the max val for an hour
             cur_cost = get_rate(time_max_data["time"]) * (cur_val - last_energy_val)
             total_cost += cur_cost
+            # Bump previous energy val tracker
+            last_energy_val = cur_val
         total_energy = total_energy.quantize(Decimal("0.001"))
         total_cost = total_cost.quantize(Decimal("0.00"))
-        print(f"{device_name=} {total_energy=} {total_cost=}")
+        # print(f"{device_name=} {total_energy=} {total_cost=}")
+        print(settings.table_format_str.format(device_name, total_energy, total_cost))
 
 
 def get_rate(time_str: str) -> Decimal:
