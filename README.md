@@ -34,6 +34,6 @@ Example usage:
 ## Planned Improvements
 
 * The energy stats gathering could be made generic and support multiple backends, a library will
-    be built to share common components here
+    be built to share common components here. The `energy_reporting` package is added as a placeholder
 * We will need more advanced configuration for energy rates and external sources
 * A WebUI will be handy for inputting variable data like rates that cannot be pre-seeded
