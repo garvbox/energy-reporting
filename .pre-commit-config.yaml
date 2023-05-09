@@ -1,0 +1,25 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        language: system
+        types: [python]
+        entry: poetry run black --check
+      - id: flake8
+        name: flake8
+        language: system
+        types: [python]
+        entry: poetry run flake8 --extend-ignore=S404,S603 --max-line-length=100
+      - id: isort
+        name: isort
+        language: system
+        types: [python]
+        entry: poetry run isort -c --profile black
