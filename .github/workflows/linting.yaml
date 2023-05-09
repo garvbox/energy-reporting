@@ -36,8 +36,8 @@ jobs:
         run: poetry install --no-interaction --no-root
 
       - name: Check Formatting with black
-        run: poetry run black --check --verbose scripts/
+        run: poetry run black --check --verbose energy_reporting scripts
       - name: Lint with flake8
-        run: poetry run flake8 ./scripts
+        run: poetry run flake8 energy_reporting scripts
       - name: Check Import order
-        run: poetry run isort -c --profile black
+        run: poetry run isort -c --profile black energy_reporting scripts/
