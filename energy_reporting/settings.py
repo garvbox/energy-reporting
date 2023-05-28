@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "power_cost.apps.PowerCostConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

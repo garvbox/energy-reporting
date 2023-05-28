@@ -1,0 +1,14 @@
+<table>
+    <tr>
+        <th>Device Friendly Name</th>
+        <th>Energy (KWh)</th>
+        <th>Cost (€)</th>
+    </tr>
+    {% for device_summary in device_summaries %}
+    <tr>
+        <td>{{ device_summary.friendly_name }}</td>
+        <td>{{ device_summary.energy }}</td>
+        <td>{{ device_summary.cost }}</td>
+    </tr>
+    {% endfor %}
+</table>

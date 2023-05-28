@@ -3,9 +3,16 @@ from decimal import Decimal
 
 from django.conf import settings
 from influxdb import InfluxDBClient
+from pydantic import BaseModel
 
 
-def get_power_data() -> str:
+class DevicePowerSummary(BaseModel):
+    friendly_name: str
+    energy: Decimal
+    cost: Decimal
+
+
+def get_device_summaries() -> list[DevicePowerSummary]:
     influx_client = InfluxDBClient(
         host=settings.INFLUX_HOST,
         port=settings.INFLUX_PORT,
@@ -13,8 +20,6 @@ def get_power_data() -> str:
         password=settings.INFLUX_PASSWORD,
         database=settings.INFLUX_DATABASE,
     )
-    # TODO Make query more generic and flexible, enumerate returned devices, abstract into
-    # data helper model
     data = influx_client.query(
         "SELECT max(value) "
         "FROM kWh WHERE (entity_id =~ /energy_total/) AND "
@@ -28,8 +33,7 @@ def get_power_data() -> str:
             .isoformat(),
         },
     )
-    format_str = "{:<36} {:>12} {:>12}"
-    resp = format_str.format("Device Friendly Name", "Energy (KWh)", "Cost (€)") + "\n"
+    resp = []
     for (_, tag_data), values in data.items():  # type: ignore
         device_name = tag_data["friendly_name"]
         total_energy = Decimal("0.00")
@@ -55,7 +59,9 @@ def get_power_data() -> str:
             last_energy_val = cur_val
         total_energy = total_energy.quantize(Decimal("0.001"))
         total_cost = total_cost.quantize(Decimal("0.00"))
-        resp += format_str.format(device_name, total_energy, total_cost) + "\n"
+        resp.append(
+            DevicePowerSummary(friendly_name=device_name, energy=total_energy, cost=total_cost)
+        )
     return resp
 
 
