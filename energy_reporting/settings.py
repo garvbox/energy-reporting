@@ -10,10 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from decimal import Decimal
 from pathlib import Path
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+environ.Env.read_env(env_file=BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
@@ -121,3 +127,44 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# InfluxDB Connection
+INFLUX_HOST = env("INFLUX_HOST", default="localhost")
+INFLUX_PORT = env("INFLUX_PORT", default=8086)
+INFLUX_USERNAME = env("INFLUX_USERNAME", default=None)
+INFLUX_PASSWORD = env("INFLUX_PASSWORD", default=None)
+INFLUX_DATABASE = env("INFLUX_DATABASE", default="influxdb")
+
+# Power Cost Reporting Settings
+POWER_HISTORY_DAYS = env("HISTORY_DAYS", default=30)
+POWER_TIME_RATE_TYPES = {
+    0: "night",
+    1: "night",
+    2: "night",
+    3: "night",
+    4: "night",
+    5: "night",
+    6: "night",
+    7: "night",
+    8: "day",
+    9: "day",
+    10: "day",
+    11: "day",
+    12: "day",
+    13: "day",
+    14: "day",
+    15: "day",
+    16: "day",
+    17: "peak",
+    18: "peak",
+    19: "day",
+    20: "day",
+    21: "day",
+    22: "day",
+    23: "day",
+}
+POWER_RATE_TYPE_COSTS = {
+    "day": Decimal("0.3095"),
+    "night": Decimal("0.2008"),
+    "peak": Decimal("0.3911"),
+}

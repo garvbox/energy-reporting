@@ -11,6 +11,7 @@ python = "^3.10"
 pydantic = "^1.10.7"
 influxdb = "^5.3.1"
 django = "^4.2.1"
+django-environ = "^0.10.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
