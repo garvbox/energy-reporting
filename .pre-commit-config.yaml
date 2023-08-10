@@ -18,3 +18,8 @@ repos:
         language: system
         types: [python]
         entry: poetry run ruff check
+      - id: mypy
+        name: mypy
+        language: system
+        types: [python]
+        entry: poetry run mypy
