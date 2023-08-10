@@ -1,3 +1,6 @@
-# from django.contrib import admin
+from django.contrib import admin
 
-# Register your models here.
+from .models import Rate, RatePeriod
+
+admin.site.register(Rate)
+admin.site.register(RatePeriod)
