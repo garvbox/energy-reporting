@@ -35,5 +35,9 @@ jobs:
 
       - name: Check Formatting with black
         run: poetry run black --check --verbose .
+
       - name: Lint with ruff
         run: poetry run ruff check .
+
+      - name: Run mypy
+        run: power run mypy ./
