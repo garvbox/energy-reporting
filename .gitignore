@@ -15,3 +15,8 @@ logs/
 # IDEs
 .vscode
 .idea
+
+
+# Added by cargo
+
+/target
