@@ -13,13 +13,13 @@ repos:
         language: system
         types: [python]
         entry: poetry run black --check
-      - id: flake8
-        name: flake8
+      - id: ruff
+        name: ruff
         language: system
         types: [python]
-        entry: poetry run flake8
-      - id: isort
-        name: isort
+        entry: poetry run ruff check
+      - id: mypy
+        name: mypy
         language: system
         types: [python]
-        entry: poetry run isort -c --profile black
+        entry: poetry run mypy
