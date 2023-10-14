@@ -13,7 +13,7 @@ async fn main() {
         // Ping DB test
         .route("/ping", get(ping_db));
 
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+    axum::Server::bind(&"0.0.0.0:8000".parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();
