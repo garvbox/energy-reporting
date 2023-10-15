@@ -6,19 +6,10 @@ services:
     build: .
     ports:
       - "8000:8000"
-    # depends_on:
-    #   - db
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/mydb
-
-  # db:
-  #   image: postgres
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: password
-  #     POSTGRES_DB: mydb
-  #   volumes:
-  #     - db-data:/var/lib/postgresql/data
+      INFLUX_URL: ${INFLUX_URL:-http://influxdb:8086}
+      INFLUX_DB: ${INFLUX_DB:-mydb}
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:password@db:5432/mydb}
 
 volumes:
   db-data:
