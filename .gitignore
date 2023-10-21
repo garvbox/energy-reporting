@@ -1,12 +1,5 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.pyc
-
-# Virtualenv
-venv
-.venv
+# Environment
 .env
-.python-version
 
 # Config
 *.ini
@@ -16,7 +9,6 @@ logs/
 .vscode
 .idea
 
-
 # Added by cargo
-
+/debug
 /target
