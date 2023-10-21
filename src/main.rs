@@ -1,12 +1,14 @@
 use axum;
+use dotenv::dotenv;
 use tracing::info;
 use tracing_subscriber;
 
+mod config;
 mod handlers;
 
 #[tokio::main]
 async fn main() {
-    // build our application with a route
+    dotenv().ok();
     tracing_subscriber::fmt::init();
     let app = axum::Router::new()
         // Ping DB test
