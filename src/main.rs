@@ -1,22 +1,42 @@
-use axum;
+use std::sync::Arc;
+
+use axum::{routing::get, Router, Server};
 use dotenv::dotenv;
+use envconfig::Envconfig;
+use influxdb::Client;
 use tracing::info;
 use tracing_subscriber;
 
 mod config;
 mod handlers;
 
+pub struct Connections {
+    client: Client,
+    // TODO: Define DB connection state here
+}
+
+impl Connections {
+    pub fn new() -> Self {
+        let config = config::Config::init_from_env().unwrap();
+        let client = Client::new(config.influx_url, config.influx_db);
+        Self { client }
+    }
+}
+
 #[tokio::main]
 async fn main() {
     dotenv().ok();
     tracing_subscriber::fmt::init();
-    let app = axum::Router::new()
+    // Set up InfluxDB Client and store as shared state
+    let state = Arc::new(Connections::new());
+    let app = Router::new()
         // Ping DB test
-        .route("/ping", axum::routing::get(handlers::handler_ping_db))
+        .route("/ping", get(handlers::handler_ping_db))
+        .with_state(state)
         .fallback(handlers::handler_404);
     info!("Starting server...");
-    axum::Server::bind(&"0.0.0.0:8000".parse().unwrap())
+    Server::bind(&"0.0.0.0:8000".parse().unwrap())
         .serve(app.into_make_service())
         .await
-        .unwrap();
+        .expect("Server failed to start")
 }

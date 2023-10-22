@@ -1,23 +1,18 @@
-use crate::config::Config;
-use axum::{http::StatusCode, response::Json};
-use influxdb::Client;
+use std::sync::Arc;
+
+use crate::Connections;
+use axum::{extract::State, http::StatusCode, response::Json};
 use serde_json::{json, Value};
 use tracing;
 type JsonWithResponseCode = (StatusCode, Json<Value>);
-
-use envconfig::Envconfig;
 
 pub async fn handler_404() -> JsonWithResponseCode {
     (StatusCode::NOT_FOUND, Json(json!({"error": "Not Found"})))
 }
 
-pub async fn handler_ping_db() -> Json<Value> {
+pub async fn handler_ping_db(State(state): State<Arc<Connections>>) -> Json<Value> {
     tracing::info!("Pinging InfluxDB");
-    let config = Config::init_from_env().unwrap();
-    // TODO: Influx client should probably be cached
-    let client: Client = Client::new(config.influx_url, config.influx_db);
-
-    let ping_res = match client.ping().await {
+    let ping_res = match state.client.ping().await {
         Ok(result) => {
             tracing::info!("Ping OK");
             result
