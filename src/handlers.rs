@@ -2,6 +2,8 @@ use std::sync::Arc;
 
 use crate::Connections;
 use axum::{extract::State, http::StatusCode, response::Json};
+use influxdb::ReadQuery;
+use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use tracing;
 type JsonWithResponseCode = (StatusCode, Json<Value>);
@@ -23,4 +25,28 @@ pub async fn ping_db(State(state): State<Arc<Connections>>) -> Json<Value> {
         }
     };
     Json(json!({ "server_type": ping_res.0, "version": ping_res.1 }))
+}
+
+#[derive(Serialize, Deserialize)]
+struct PowerStat {
+    time: String,
+    value: f64,
+    friendly_name: String,
+}
+
+pub async fn get_data(State(state): State<Arc<Connections>>) -> Json<Value> {
+    tracing::info!("Getting data from InfluxDB");
+    let query_res = state
+        .client
+        .json_query(ReadQuery::new(
+            "SELECT friendly_name, value FROM W WHERE time >= now() - 1h",
+        ))
+        .await
+        .and_then(|mut result| {
+            tracing::info!("Query OK");
+            Ok(result.deserialize_next::<PowerStat>().unwrap())
+        });
+    let results = query_res.unwrap();
+    let data: Vec<PowerStat> = results.series.into_iter().flat_map(|s| s.values).collect();
+    Json(json!({ "results": data }))
 }

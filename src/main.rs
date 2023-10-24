@@ -32,6 +32,7 @@ async fn main() {
     let app = Router::new()
         // Ping DB test
         .route("/ping", get(handlers::ping_db))
+        .route("/data", get(handlers::get_data))
         .with_state(state)
         .fallback(handlers::handler_404);
     info!("Starting server...");
