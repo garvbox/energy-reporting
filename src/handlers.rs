@@ -10,7 +10,7 @@ pub async fn handler_404() -> JsonWithResponseCode {
     (StatusCode::NOT_FOUND, Json(json!({"error": "Not Found"})))
 }
 
-pub async fn handler_ping_db(State(state): State<Arc<Connections>>) -> Json<Value> {
+pub async fn ping_db(State(state): State<Arc<Connections>>) -> Json<Value> {
     tracing::info!("Pinging InfluxDB");
     let ping_res = match state.client.ping().await {
         Ok(result) => {
@@ -22,7 +22,5 @@ pub async fn handler_ping_db(State(state): State<Arc<Connections>>) -> Json<Valu
             return Json(json!({"error": error.to_string()}));
         }
     };
-    let (server_type, res) = ping_res;
-    // res
-    Json(json!({ "server_type": server_type, "version": res }))
+    Json(json!({ "server_type": ping_res.0, "version": ping_res.1 }))
 }

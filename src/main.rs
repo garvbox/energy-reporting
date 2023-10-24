@@ -31,7 +31,7 @@ async fn main() {
     let state = Arc::new(Connections::new());
     let app = Router::new()
         // Ping DB test
-        .route("/ping", get(handlers::handler_ping_db))
+        .route("/ping", get(handlers::ping_db))
         .with_state(state)
         .fallback(handlers::handler_404);
     info!("Starting server...");
